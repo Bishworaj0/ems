@@ -1,0 +1,38 @@
+<script>// Login Functionality
+function setupLoginForm(type) {
+    document.querySelector(`#${type}Login button.w-full`).addEventListener('click', function() {
+        const username = document.querySelector(`#${type}Login input[type="text"]`).value;
+        const password = document.querySelector(`#${type}Login input[type="password"]`).value;
+        
+        if (username && password) {
+            // In a real application, you would handle authentication here
+            closeLogin(type);
+            
+            // Update UI to show logged in state
+            const usernameDisplay = username.length > 10 ? username.substring(0, 10) + '...' : username;
+            
+            // Add user info to header
+            const header = document.querySelector('header');
+            const userInfo = document.createElement('div');
+            userInfo.className = 'flex items-center mt-2 text-sm text-green-600';
+            userInfo.innerHTML = `<i class="fas fa-user-circle mr-1"></i> Logged in as: <span class="font-semibold ml-1">${usernameDisplay}</span>`;
+            
+            // Check if user info already exists
+            const existingUserInfo = header.querySelector('.text-sm.text-green-600');
+            if (existingUserInfo) {
+                existingUserInfo.innerHTML = userInfo.innerHTML;
+            } else {
+                header.querySelector('div:first-child').appendChild(userInfo);
+            }
+            
+            showNotification(`Logged in successfully as ${type}!`);
+        } else {
+            // Show error for empty fields
+            showNotification('Please enter username and password', 'error');
+        }
+    });
+}
+
+setupLoginForm('admin');
+setupLoginForm('user');
+</script>

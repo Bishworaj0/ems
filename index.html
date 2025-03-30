@@ -1,0 +1,1435 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card {
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #4ade80;
+            transition: width 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .animation-delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .animation-delay-2 {
+            animation-delay: 0.1s;
+        }
+
+        .animation-delay-3 {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Sidebar -->
+        <aside class="w-full lg:w-72 bg-white shadow-lg flex-shrink-0 lg:h-screen sticky top-0">
+            <div class="p-6">
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center">
+                        <i class="fas fa-leaf text-white"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-green-700">Green Valley Farm</h2>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <div class="block lg:hidden">
+                    <button id="menuToggle" class="bg-green-100 text-green-700 px-4 py-2 rounded-lg w-full mb-4 flex items-center justify-between" aria-label="Toggle menu">
+                        <span>Menu</span>
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+
+                <ul id="mobileMenu" class="hidden lg:block">
+                    <li class="sidebar-item flex items-center space-x-3 p-3 bg-green-100 rounded-lg text-green-700 font-medium mb-2">
+                        <i class="fas fa-chart-line w-5"></i>
+                        <span>Dashboard</span>
+                        <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                            <a href="product.html" class="flex items-center space-x-3">
+                                <i class="fas fa-shopping-cart w-5"></i>
+                                <span>Product Order</span>
+                            </a>
+                        </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <i class="fas fa-database w-5"></i>
+                        <span>Manage Data</span>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <i class="fas fa-basket-shopping w-5"></i>
+                        <span>In Basket Message</span>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <i class="fas fa-cloud-sun w-5"></i>
+                        <span>Weather</span>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <a href = "settings.html" class="flex items-center space-x-3" >
+                        <i class="fas fa-cog w-5"></i>
+                        <span>Settings</span>
+                    </a>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <i class="fas fa-bell w-5"></i>
+                        <span>Reminder</span>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <i class="fas fa-dollar-sign w-5"></i>
+                        <span>Accounts</span>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2">
+                        <a href="help.html" class="flex items-center space-x-3">
+                            <i class="fas fa-question-circle w-5"></i>
+                            <span>Help</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2 cursor-pointer" onclick="showLogin('admin')">
+                        <a href ="login.html"class= "flrx items-center space-x-3"> 
+                        <i class="fas fa-user-shield w-5"></i>
+                        <span>Admin Login</span>
+                    </a>
+                    </li>
+                    <li class="sidebar-item flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg text-gray-700 font-medium mb-2 cursor-pointer" onclick="showLogin('user')">
+                    <a href = "login.html"class = "flex items-center space-x-3">
+                    <i class="fas fa-user w-5"></i>
+                        <span>User Login</span>
+                    </a>
+                    </li>
+               
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 lg:p-8 overflow-auto">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header -->
+                <header class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Farm Dashboard</h1>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-600 font-semibold flex items-center">
+                                <i class="fas fa-arrow-up mr-1"></i> 2.1% vs last week
+                            </span>
+                            <span class="text-gray-500 ml-4 text-sm">Updated 2 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <div class="flex items-center space-x-3">
+                            <div class="flex items-center bg-white p-2 rounded-lg shadow">
+                                <i class="fas fa-calendar-alt text-gray-500 mr-2"></i>
+                                <span id = "realTimeCalendar"class="text-gray-700"> Loading data....</span>
+                            </div>
+                            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                <i class="fas fa-plus mr-2"></i>
+                                <span>New Task</span>
+                            </button>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- Stats Cards -->
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="dashboard-card bg-white rounded-xl shadow p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-700">Total Crops</h3>
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-seedling text-green-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-800 mt-4">24</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-green-600 text-sm font-semibold">+2 new</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow p-6 fade-in animation-delay-2">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-700">Field Capacity</h3>
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                                <i class="fas fa-chart-pie text-blue-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-800 mt-4">76%</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-blue-600 text-sm font-semibold">+4%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow p-6 fade-in animation-delay-3">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-700">Yield Forecast</h3>
+                            <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                                <i class="fas fa-chart-line text-amber-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-800 mt-4">92%</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-amber-600 text-sm font-semibold">+12%</span>
+                            <span class="text-gray-500 text-sm ml-2">projected</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card bg-white rounded-xl shadow p-6 fade-in">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-lg font-semibold text-gray-700">Equipment Status</h3>
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                                <i class="fas fa-tractor text-purple-600"></i>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-gray-800 mt-4">95%</p>
+                        <div class="flex items-center mt-2">
+                            <span class="text-purple-600 text-sm font-semibold">2 maintenance</span>
+                            <span class="text-gray-500 text-sm ml-2">scheduled</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Additional Card Section -->
+                <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow p-6 fade-in animation-delay-4">
+                        <h3 class="text-lg font-semibold text-gray-700">Field Capacity</h3>
+                        <p class="text-3xl font-bold text-gray-800">76%</p>
+                        <p class="text-blue-600 text-sm font-semibold">+4%</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 fade-in animation-delay-5">
+                        <h3 class="text-lg font-semibold text-gray-700">Yield Forecast</h3>
+                        <p class="text-3xl font-bold text-gray-800">92%</p>
+                        <p class="text-amber-600 text-sm font-semibold">+12% projected</p>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 fade-in animation-delay-6">
+                        <h3 class="text-lg font-semibold text-gray-700">Equipment Status</h3>
+                        <p class="text-3xl font-bold text-gray-800">95%</p>
+                        <p class="text-purple-600 text-sm font-semibold">2 maintenance scheduled</p>
+                    </div>
+                </section>
+
+                <!-- Chart Section -->
+                <section class="bg-white rounded-xl shadow p-6 mb-8 fade-in" style="animation-delay: 0.4s;">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">Farm Performance</h3>
+                        <div class="flex mt-4 md:mt-0 space-x-3">
+                            <button class="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm">Week</button>
+                            <button class="bg-gray-200 text-gray-700 px-4 py-1 rounded-lg text-sm">Month</button>
+                            <button class="bg-gray-200 text-gray-700 px-4 py-1 rounded-lg text-sm">Year</button>
+                        </div>
+                    </div>
+                    <canvas id="barChart" class="w-full h-80"></canvas>
+                </section>
+                
+                <!-- Overall Rating and Daily Checklist -->
+                <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <!-- Overall Rating -->
+                    <div class="bg-white rounded-xl shadow p-6 fade-in" style="animation-delay: 0.5s;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Overall Rating</h3>
+                        <div class="flex items-center justify-center">
+                            <canvas id="donutChart" class="max-h-64"></canvas>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mt-6">
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Productivity</p>
+                                <p class="text-xl font-semibold text-gray-800">87%</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Efficiency</p>
+                                <p class="text-xl font-semibold text-gray-800">92%</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-sm text-gray-500">Sustainability</p>
+                                <p class="text-xl font-semibold text-gray-800">79%</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Daily Checklist -->
+                    <div class="bg-white rounded-xl shadow p-6 fade-in" style="animation-delay: 0.6s;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Daily Checklist</h3>
+                        <ul class="space-y-4">
+                            <li>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                        <span class="text-gray-700">Irrigation System Check</span>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">Completed</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                                        <span class="text-gray-700">Field Inspection</span>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">Completed</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-amber-500 mr-2"></i>
+                                        <span class="text-gray-700">Pest Control</span>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">In Progress</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-times-circle text-gray-400 mr-2"></i>
+                                        <span class="text-gray-700">Equipment Maintenance</span>
+                                    </div>
+                                    <span class="text-gray-500 text-sm">Pending</span>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-flask text-blue-500 mr-2"></i>
+                                        <span class="text-gray-700">Fertilizer Inventory</span>
+                                    </div>
+                                    <span class="text-green-500 text-sm font-semibold">88%</span>
+                                </div>
+                                <div class="progress-bar mt-1">
+                                    <div class="progress-value" style="width: 88%;"></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                
+                <!-- Weather Section -->
+                <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="md:col-span-2 bg-white rounded-xl shadow p-6 fade-in" style="animation-delay: 0.7s;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Weather Forecast</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <div class="flex-1 min-w-[120px] bg-blue-50 rounded-lg p-4 text-center">
+                                <p class="text-gray-500">Today</p>
+                                <i class="fas fa-sun text-3xl text-amber-500 my-3"></i>
+                                <p class="text-lg font-semibold"data-celsius="24">24°C</p>
+                                <p class="text-sm text-gray-500">Sunny</p>
+                            </div>
+                            <div class="flex-1 min-w-[120px] bg-gray-50 rounded-lg p-4 text-center">
+                                <p class="text-gray-500">Tomorrow</p>
+                                <i class="fas fa-cloud-sun text-3xl text-gray-400 my-3"></i>
+                                <p class="text-lg font-semibold"data-celsius="22">22°C</p>
+                                <p class="text-sm text-gray-500">Partly Cloudy</p>
+                            </div>
+                            <div class="flex-1 min-w-[120px] bg-gray-50 rounded-lg p-4 text-center">
+                                <p class="text-gray-500">Wednesday</p>
+                                <i class="fas fa-cloud-rain text-3xl text-blue-500 my-3"></i>
+                                <p class="text-lg font-semibold"data-celsius="20">20°C</p>
+                                <p class="text-sm text-gray-500">Light Rain</p>
+                            </div>
+                            <div class="flex-1 min-w-[120px] bg-gray-50 rounded-lg p-4 text-center">
+                                <p class="text-gray-500">Thursday</p>
+                                <i class="fas fa-cloud text-3xl text-gray-400 my-3"></i>
+                                <p class="text-lg font-semibold"data-celsius="21">21°C</p>
+                                <p class="text-sm text-gray-500">Cloudy</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow p-6 fade-in" style="animation-delay: 0.8s;">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Soil Conditions</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Moisture</span>
+                                    <span class="text-blue-600 font-semibold">62%</span>
+                                </div>
+                                <div class="progress-bar mt-1">
+                                    <div class="progress-value bg-blue-500" style="width: 62%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">pH Level</span>
+                                    <span class="text-green-600 font-semibold">6.8</span>
+                                </div>
+                                <div class="progress-bar mt-1">
+                                    <div class="progress-value bg-green-500" style="width: 68%;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-700">Nitrogen</span>
+                                    <span class="text-amber-600 font-semibold">78%</span>
+                                </div>
+                                <div class="progress-bar mt-1">
+                                    <div class="progress-value bg-amber-500" style="width: 78%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Login Pages -->
+    <div id="adminLogin" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full fade-in">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onclick="closeLogin('admin')" title="Close Admin Login">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-user-shield text-2xl text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Admin Login</h2>
+                <p class="text-gray-500 mt-1">Access farm management controls</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="h-4 w-4 text-green-600 border-gray-300 rounded">
+                        <label for="remember" class="ml-2 text-sm text-gray-600">Remember me</label>
+                    </div>
+                    <a href="#" class="text-sm text-green-600 hover:text-green-800">Forgot password?</a>
+                </div>
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition ease-in-out duration-150 flex items-center justify-center">
+                    <span>Login</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="userLogin" class="hidden fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full fade-in">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onclick="closeLogin('user')" title="Close User Login">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 mb-4">
+                    <i class="fas fa-user text-2xl text-blue-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">User Login</h2>
+                <p class="text-gray-500 mt-1">Access your farm dashboard</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Username</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400"></i>
+                        </div>
+                        <input type="text" placeholder="Enter username" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Password</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" placeholder="Enter password" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember-user" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="remember-user" class="ml-2 text-sm text-gray-600">Remember me</label>
+                    </div>
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</a>
+                </div>
+                <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition ease-in-out duration-150 flex items-center justify-center">
+                    <span>Login</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="helpModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative">
+            <button id="closeHelpModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" title="Close Help Modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-2xl font-bold text-gray-800">Help & Support</h3>
+            <p class="text-gray-600 mt-2">Find answers to common questions below or submit your own.</p>
+            
+            <div class="mt-4">
+                <h4 class="text-lg font-semibold text-gray-700">Frequently Asked Questions</h4>
+                <ul class="mt-2 space-y-2">
+                    <li class="help-question text-blue-600 cursor-pointer">How do I add a reminder?</li>
+                    <li class="help-question text-blue-600 cursor-pointer">How can I check the weather forecast?</li>
+                    <li class="help-question text-blue-600 cursor-pointer">How do I update my farm data?</li>
+                </ul>
+                <p id="helpAnswer" class="text-gray-800 font-medium mt-4 hidden"></p>
+            </div>
+    
+            <div class="mt-4">
+                <h4 class="text-lg font-semibold text-gray-700">Still Need Help?</h4>
+                <form id="helpForm">
+                    <input type="text" id="userQuestion" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Enter your question..." required>
+                    <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg mt-2">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Show/Hide Login
+        function showLogin(type) {
+            document.getElementById(type + "Login").classList.remove("hidden");
+        }
+
+        function closeLogin(type) {
+            document.getElementById(type + "Login").classList.add("hidden");
+        }
+
+        // Bar Chart
+        const ctxBar = document.getElementById('barChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    label: 'Farm Performance',
+                    data: [12, 19, 15, 17, 22, 18, 20],
+                    backgroundColor: 'rgba(74, 222, 128, 0.8)',
+                    borderColor: 'rgba(22, 163, 74, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Donut Chart
+        const ctxDonut = document.getElementById('donutChart').getContext('2d');
+        new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: ['Productivity', 'Efficiency', 'Sustainability'],
+                datasets: [{
+                    label: 'Overall Rating',
+                    data: [87, 92, 79],
+                    backgroundColor: [
+                        'rgba(74, 222, 128, 0.8)',
+                        'rgba(37, 99, 235, 0.8)',
+                        'rgba(251, 191, 36, 0.8)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        document.getElementById('menuToggle').addEventListener('click', function() {
+    const menu = document.getElementById('mobileMenu');
+    const icon = this.querySelector('i');
+    
+    menu.classList.toggle('hidden');
+    
+    // Toggle icon between bars and times
+    if (icon.classList.contains('fa-bars')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+    } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+    }
+});
+
+// Sidebar Item Highlighting
+const sidebarItems = document.querySelectorAll('.sidebar-item');
+sidebarItems.forEach(item => {
+    item.addEventListener('click', function() {
+        // Remove active class from all items
+        sidebarItems.forEach(i => {
+            i.classList.remove('bg-green-100', 'text-green-700');
+            i.classList.add('hover:bg-gray-100', 'text-gray-700');
+        });
+        
+        // Add active class to clicked item
+        this.classList.add('bg-green-100', 'text-green-700');
+        this.classList.remove('hover:bg-gray-100', 'text-gray-700');
+    });
+});
+
+
+// Time Period Selection for Charts
+const timeButtons = document.querySelectorAll('.flex.mt-4.md\\:mt-0.space-x-3 button');
+timeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        // Reset all buttons
+        timeButtons.forEach(btn => {
+            btn.classList.remove('bg-blue-500', 'text-white');
+            btn.classList.add('bg-gray-200', 'text-gray-700');
+        });
+        
+        // Highlight selected button
+        this.classList.remove('bg-gray-200', 'text-gray-700');
+        this.classList.add('bg-blue-500', 'text-white');
+        
+        // Update chart data based on selected time period
+        updateChartData(this.textContent.trim());
+    });
+});
+
+function updateChartData(timePeriod) {
+    const chart = Chart.getChart('barChart');
+    
+    let newLabels = [];
+    let newData = [];
+    
+    switch(timePeriod) {
+        case 'Week':
+            newLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            newData = [12, 19, 15, 17, 22, 18, 20];
+            break;
+        case 'Month':
+            newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            newData = [68, 72, 85, 91];
+            break;
+        case 'Year':
+            newLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            newData = [65, 59, 80, 81, 56, 55, 72, 78, 82, 85, 76, 88];
+            break;
+    }
+    
+    chart.data.labels = newLabels;
+    chart.data.datasets[0].data = newData;
+    chart.update();
+}
+
+// New Task Button
+document.querySelector('button.bg-green-600.hover\\:bg-green-700').addEventListener('click', function() {
+    // Create task form modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 fade-in';
+    modal.id = 'taskModal'; 
+    modal.innerHTML = `
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="closeTaskModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-tasks text-2xl text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Create New Task</h2>
+                <p class="text-gray-500 mt-1">Add a new task to your farm schedule</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Task Name</label>
+                    <input type="text" placeholder="Enter task name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Description</label>
+                    <textarea placeholder="Enter task description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition" rows="3"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Due Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Priority</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition ease-in-out duration-150" id="submitTask">
+                    Create Task
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal button
+    document.getElementById('closeTaskModal').addEventListener('click', function() {
+        document.body.removeChild(modal);
+    });
+    
+    // Submit task button
+    document.getElementById('submitTask').addEventListener('click', function() {
+        // Add task to the checklist
+        const checklist = document.querySelector('.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.6s;"] ul');
+        
+        const taskName = modal.querySelector('input[type="text"]').value || 'New Task';
+        
+        const newTask = document.createElement('li');
+        newTask.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center">
+                    <i class="fas fa-times-circle text-gray-400 mr-2"></i>
+                    <span class="text-gray-700">${taskName}</span>
+                </div>
+                <span class="text-gray-500 text-sm">Pending</span>
+            </div>
+        `;
+        
+        checklist.appendChild(newTask);
+        document.body.removeChild(modal);
+        
+        // Show success notification
+        showNotification('Task created successfully!');
+    });
+});
+
+// Login Functionality
+function setupLoginForm(type) {
+    document.querySelector(`#${type}Login button.w-full`).addEventListener('click', function() {
+        const username = document.querySelector(`#${type}Login input[type="text"]`).value;
+        const password = document.querySelector(`#${type}Login input[type="password"]`).value;
+        
+        if (username && password) {
+            // In a real application, you would handle authentication here
+            closeLogin(type);
+            
+            // Update UI to show logged in state
+            const usernameDisplay = username.length > 10 ? username.substring(0, 10) + '...' : username;
+            
+            // Add user info to header
+            const header = document.querySelector('header');
+            const userInfo = document.createElement('div');
+            userInfo.className = 'flex items-center mt-2 text-sm text-green-600';
+            userInfo.innerHTML = `<i class="fas fa-user-circle mr-1"></i> Logged in as: <span class="font-semibold ml-1">${usernameDisplay}</span>`;
+            
+            // Check if user info already exists
+            const existingUserInfo = header.querySelector('.text-sm.text-green-600');
+            if (existingUserInfo) {
+                existingUserInfo.innerHTML = userInfo.innerHTML;
+            } else {
+                header.querySelector('div:first-child').appendChild(userInfo);
+            }
+            
+            showNotification(`Logged in successfully as ${type}!`);
+        } else {
+            // Show error for empty fields
+            showNotification('Please enter username and password', 'error');
+        }
+    });
+}
+
+setupLoginForm('admin');
+setupLoginForm('user');
+
+// Notification system
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white z-50 fade-in ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+    notification.innerHTML = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 0.5s ease-in-out';
+        
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 3000);
+}
+
+// Make checklist items interactive
+const checklistItems = document.querySelectorAll('.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.6s;"] li');
+checklistItems.forEach(item => {
+    item.addEventListener('click', function() {
+        const icon = this.querySelector('i');
+        const status = this.querySelector('span.text-gray-500, span.text-green-500');
+        
+        // Toggle between states: pending → in progress → completed → pending
+        if (icon.classList.contains('fa-times-circle')) {
+            // Change to in progress
+            icon.className = 'fas fa-clock text-amber-500 mr-2';
+            status.textContent = 'In Progress';
+            status.className = 'text-amber-500 text-sm';
+        } else if (icon.classList.contains('fa-clock')) {
+            // Change to completed
+            icon.className = 'fas fa-check-circle text-green-500 mr-2';
+            status.textContent = 'Completed';
+            status.className = 'text-green-500 text-sm';
+        } else {
+            // Change back to pending
+            icon.className = 'fas fa-times-circle text-gray-400 mr-2';
+            status.textContent = 'Pending';
+            status.className = 'text-gray-500 text-sm';
+        }
+    });
+});
+
+// Initialize the charts with interactive tooltips
+function enhanceCharts() {
+    // Get existing charts
+    const barChart = Chart.getChart('barChart');
+    const donutChart = Chart.getChart('donutChart');
+    
+    // Add click interactions to bar chart
+    document.getElementById('barChart').addEventListener('click', function(evt) {
+        const points = barChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+        
+        if (points.length) {
+            const firstPoint = points[0];
+            const label = barChart.data.labels[firstPoint.index];
+            const value = barChart.data.datasets[0].data[firstPoint.index];
+            
+            showNotification(`${label}: ${value} units`);
+        }
+    });
+    
+    // Add click interactions to donut chart
+    document.getElementById('donutChart').addEventListener('click', function(evt) {
+        const points = donutChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+        
+        if (points.length) {
+            const firstPoint = points[0];
+            const label = donutChart.data.labels[firstPoint.index];
+            const value = donutChart.data.datasets[0].data[firstPoint.index];
+            
+            showNotification(`${label}: ${value}%`);
+        }
+    });
+}
+
+// Call enhance charts after the page loads
+window.addEventListener('load', function() {
+    enhanceCharts();
+});
+// Settings Button Functionality
+document.querySelector('.sidebar-item:nth-child(6)').addEventListener('click', function() {
+    // Create settings modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 fade-in';
+    modal.id = 'settingsModal';
+    modal.innerHTML = `
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="closeSettingsModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-cog text-2xl text-green-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Settings</h2>
+                <p class="text-gray-500 mt-1">Customize your farm dashboard</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Temperature Unit</label>
+                    <select id="tempUnit" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                        <option value="celsius" selected>Celsius (°C)</option>
+                        <option value="fahrenheit">Fahrenheit (°F)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Language</label>
+                    <select id="language" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                        <option value="en" selected>English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Theme</label>
+                    <select id="theme" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition">
+                        <option value="light" selected>Light</option>
+                        <option value="dark">Dark</option>
+                        <option value="system">System Default</option>
+                    </select>
+                </div>
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-700 text-sm font-medium">Notifications</label>
+                    <label class="switch relative inline-block w-14 h-7">
+                        <input type="checkbox" id="notificationsToggle" checked>
+                        <span class="slider round absolute cursor-pointer inset-0 bg-gray-300 transition-all duration-300 rounded-full"></span>
+                    </label>
+                </div>
+                <button id="saveSettings" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition ease-in-out duration-150">
+                    Save Settings
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close settings modal
+    document.getElementById('closeSettingsModal').addEventListener('click', function() {
+        document.body.removeChild(modal);
+    });
+    
+    // Save settings
+    document.getElementById('saveSettings').addEventListener('click', function() {
+        const tempUnit = document.getElementById('tempUnit').value;
+        const language = document.getElementById('language').value;
+        const theme = document.getElementById('theme').value;
+        const notifications = document.getElementById('notificationsToggle').checked;
+        
+        // Validate settings (you can add more validation as needed)
+        if (!tempUnit || !language || !theme) {
+            alert("Please fill in all fields.");
+            return;
+        }
+        
+        // Save settings to localStorage
+        const settings = {
+            tempUnit,
+            language,
+            theme,
+            notifications
+        };
+        
+        localStorage.setItem('farmDashboardSettings', JSON.stringify(settings));
+        
+        // Apply settings
+        applySettings(settings);
+        
+        // Close modal
+        document.body.removeChild(modal);
+        
+        // Show success notification
+        showNotification('Settings saved successfully!');
+    });
+});
+
+/// Apply settings function
+function applySettings(settings) {
+    const weatherElements = document.querySelectorAll('.weather-temp');
+    
+    if (settings.tempUnit === 'fahrenheit') {
+        weatherElements.forEach(el => {
+            const celsiusTemp = parseInt(el.dataset.celsius); // Use data attribute for original Celsius value
+            if (!isNaN(celsiusTemp)) { // Check if the value is a number
+                const fahrenheitTemp = Math.round(celsiusTemp * 9/5 + 32);
+                el.textContent = fahrenheitTemp + '°F';
+            } else {
+                console.error("Invalid Celsius temperature:", el.dataset.celsius);
+            }
+        });
+    } else {
+        weatherElements.forEach(el => {
+            const fahrenheitTemp = parseInt(el.textContent); // Get the current Fahrenheit value
+            if (!isNaN(fahrenheitTemp)) { // Check if the value is a number
+                const celsiusTemp = Math.round((fahrenheitTemp - 32) * 5/9);
+                el.textContent = celsiusTemp + '°C';
+            } else {
+                console.error("Invalid Fahrenheit temperature:", el.textContent);
+            }
+        });
+    }
+
+    // Apply theme
+    if (settings.theme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.body.style.backgroundColor = '#1f2937';
+        document.body.style.color = '#f3f4f6';
+        
+        // Change card colors
+        document.querySelectorAll('.bg-white').forEach(el => {
+            el.classList.remove('bg-white');
+            el.classList.add('bg-gray-800');
+            el.classList.add('text-white');
+        });
+    } else {
+        document.body.classList.remove('dark-mode');
+        document.body.style.backgroundColor = '';
+        document.body.style.color = '';
+        
+        // Reset card colors
+        document.querySelectorAll('.bg-gray-800').forEach(el => {
+            el.classList.remove('bg-gray-800');
+            el.classList.remove('text-white');
+            el.classList.add('bg-white');
+        });
+    }
+}
+
+// Load saved settings on page load
+window.addEventListener('load', function() {
+    const savedSettings = localStorage.getItem('farmDashboardSettings');
+    if (savedSettings) {
+        applySettings(JSON.parse(savedSettings));
+    }
+
+});
+
+// Notification function
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 px-6 py-3 rounded-lg text-white bg-green-500 z-50 fade-in';
+    notification.innerHTML = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 500);
+    }, 3000);
+}
+
+// Weather Button Functionality
+document.querySelector('.sidebar-item:nth-child(5)').addEventListener('click', function() {
+    // Update the weather section with real-time data
+    fetchWeatherData();
+    
+    // Scroll to the weather section
+    document.querySelector('.md\\:col-span-2.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.7s;"]')
+        .scrollIntoView({ behavior: 'smooth' });
+    
+    // Highlight the weather section
+    const weatherSection = document.querySelector('.md\\:col-span-2.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.7s;"]');
+    weatherSection.classList.add('ring-4', 'ring-blue-500', 'ring-opacity-50');
+    
+    setTimeout(() => {
+        weatherSection.classList.remove('ring-4', 'ring-blue-500', 'ring-opacity-50');
+    }, 2000);
+});
+
+// Function to fetch real-time weather data
+function fetchWeatherData() {
+    // Show loading state
+    const weatherContainer = document.querySelector('.flex.flex-wrap.gap-4');
+    weatherContainer.innerHTML = `
+        <div class="w-full text-center py-8">
+            <i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i>
+            <p class="mt-2 text-gray-600">Fetching weather data...</p>
+        </div>
+    `;
+    
+    // In a real app, you would use an actual API like OpenWeatherMap, Weather API, etc.
+    // For demonstration purposes, we'll simulate an API call with setTimeout
+    setTimeout(() => {
+        // Sample weather data (in a real app, this would come from the API)
+        const weatherData = {
+            current: {
+                date: new Date().toLocaleDateString(),
+                temp: 24,
+                condition: 'Sunny',
+                icon: 'fa-sun',
+                humidity: 65,
+                wind: 12
+            },
+            forecast: [
+                { day: 'Today', temp: 24, condition: 'Sunny', icon: 'fa-sun' },
+                { day: 'Tomorrow', temp: 22, condition: 'Partly Cloudy', icon: 'fa-cloud-sun' },
+                { day: 'Wednesday', temp: 20, condition: 'Light Rain', icon: 'fa-cloud-rain' },
+                { day: 'Thursday', temp: 21, condition: 'Cloudy', icon: 'fa-cloud' },
+                { day: 'Friday', temp: 23, condition: 'Sunny', icon: 'fa-sun' }
+            ]
+        };
+        
+        // Apply temperature unit setting if available
+        const savedSettings = localStorage.getItem('farmDashboardSettings');
+        const settings = savedSettings ? JSON.parse(savedSettings) : { tempUnit: 'celsius' };
+        
+        // Update weather display
+        updateWeatherDisplay(weatherData, settings.tempUnit);
+        
+        // Show success notification
+        showNotification('Weather data updated!');
+    }, 1500);
+}
+
+// Function to update weather display
+function updateWeatherDisplay(data, unit) {
+    const weatherContainer = document.querySelector('.flex.flex-wrap.gap-4');
+    
+    // Clear previous content
+    weatherContainer.innerHTML = '';
+    
+    // Update header to show last updated time
+    const weatherHeader = document.querySelector('.md\\:col-span-2.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.7s;"] h3');
+    weatherHeader.innerHTML = `Weather Forecast <span class="text-sm text-gray-500 font-normal ml-2">Updated: ${new Date().toLocaleTimeString()}</span>`;
+    
+    // Add detailed current weather card
+    const currentWeatherCard = document.createElement('div');
+    currentWeatherCard.className = 'w-full bg-blue-50 rounded-lg p-4 mb-4';
+    
+    // Get temperature in the correct unit
+    let currentTemp = data.current.temp;
+    let tempSymbol = '°C';
+    
+    if (unit === 'fahrenheit') {
+        currentTemp = Math.round(data.current.temp * 9/5 + 32);
+        tempSymbol = '°F';
+    }
+    
+    currentWeatherCard.innerHTML = `
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-500">Currently</p>
+                <p class="text-3xl font-bold mt-1 weather-temp">${currentTemp}${tempSymbol}</p>
+                <p class="text-gray-700">${data.current.condition}</p>
+            </div>
+            <div class="text-center">
+                <i class="fas ${data.current.icon} text-5xl text-amber-500"></i>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4 mt-4">
+            <div>
+                <p class="text-gray-500 text-sm">Humidity</p>
+                <p class="font-semibold">${data.current.humidity}%</p>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm">Wind</p>
+                <p class="font-semibold">${data.current.wind} km/h</p>
+            </div>
+        </div>
+    `;
+    
+    weatherContainer.appendChild(currentWeatherCard);
+    
+    // Add forecast cards
+    data.forecast.forEach(day => {
+        // Get temperature in the correct unit
+        let dayTemp = day.temp;
+        
+        if (unit === 'fahrenheit') {
+            dayTemp = Math.round(day.temp * 9/5 + 32);
+        }
+        
+        const dayCard = document.createElement('div');
+        dayCard.className = 'flex-1 min-w-[120px] bg-gray-50 rounded-lg p-4 text-center';
+        dayCard.innerHTML = `
+            <p class="text-gray-500">${day.day}</p>
+            <i class="fas ${day.icon} text-3xl ${day.condition.includes('Rain') ? 'text-blue-500' : day.condition.includes('Cloud') ? 'text-gray-400' : 'text-amber-500'} my-3"></i>
+            <p class="text-lg font-semibold weather-temp">${dayTemp}${tempSymbol}</p>
+            <p class="text-sm text-gray-500">${day.condition}</p>
+        `;
+        
+        weatherContainer.appendChild(dayCard);
+    });
+    
+    // Add refresh button
+    const refreshButton = document.createElement('div');
+    refreshButton.className = 'w-full mt-4';
+    refreshButton.innerHTML = `
+        <button class="bg-blue-100 hover:bg-blue-200 text-blue-700 py-2 px-4 rounded-lg w-full transition duration-200 flex items-center justify-center">
+            <i class="fas fa-sync-alt mr-2"></i>
+            Refresh Weather Data
+        </button>
+    `;
+    
+    weatherContainer.appendChild(refreshButton);
+    
+    // Add refresh functionality
+    refreshButton.querySelector('button').addEventListener('click', fetchWeatherData);
+}
+
+// Call fetchWeatherData when the page loads to initialize with real data
+window.addEventListener('load', function() {
+    // Wait a bit to allow the page animations to complete
+    setTimeout(fetchWeatherData, 1000);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Real-Time Calendar
+    function updateRealTimeCalendar() {
+        const calendarElement = document.querySelector('#realTimeCalendar');
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        calendarElement.innerHTML = now.toLocaleDateString('en-US', options);
+    }
+    setInterval(updateRealTimeCalendar, 1000);
+});
+
+
+// Manage Data Button Functionality
+
+document.querySelector('.sidebar-item:nth-child(3)').addEventListener('click', function() {
+    // Create manage data modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 fade-in';
+    modal.id = 'manageDataModal';
+    modal.innerHTML = `
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="closeManageDataModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Manage Data</h3>
+            <form id="dataForm" class="space-y-4">
+                <div>
+                    <label for="dataName" class="block text-gray-700">Data Name</label>
+                    <input type="text" id="dataName" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter data name" required>
+                </div>
+                <div>
+                    <label for="dataValue" class="block text-gray-700">Data Value</label>
+                    <input type="text" id="dataValue" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter data value" required>
+                </div>
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">Add Data</button>
+            </form>
+            <div id="dataList" class="mt-6">
+                <h4 class="text-lg font-semibold text-gray-800">Data Entries:</h4>
+                <ul id="entries" class="list-disc pl-5"></ul>
+            </div>
+        </div>
+    `;
+    
+    // Append modal to body
+    document.body.appendChild(modal);
+
+    // Close modal functionality
+    document.getElementById('closeManageDataModal').addEventListener('click', function() {
+        document.body.removeChild(modal);
+    });
+
+    // Handle form submission
+    document.getElementById('dataForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the values from the form
+        const dataName = document.getElementById('dataName').value.trim();
+        const dataValue = document.getElementById('dataValue').value.trim();
+
+        // Validate input
+        if (!dataName || !dataValue) {
+            alert("Please fill in both fields.");
+            return;
+        }
+
+        // Create a new data entry
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <span>${dataName}: ${dataValue}</span>
+            <button class="edit-button bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg ml-2">Edit</button>
+            <button class="delete-button bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg ml-2">Delete</button>
+        `;
+        document.getElementById('entries').appendChild(listItem);
+
+        // Clear the form fields
+        this.reset();
+
+        // Add event listeners for edit and delete buttons
+        addEventListenersToButtons(listItem);
+    });
+
+    function addEventListenersToButtons(listItem) {
+        // Edit button functionality
+        const editButton = listItem.querySelector('.edit-button');
+        editButton.addEventListener('click', function() {
+            const dataText = listItem.querySelector('span').textContent.split(': ');
+            const name = dataText[0];
+            const value = dataText[1];
+
+            // Populate the form with the existing data
+            document.getElementById('dataName').value = name;
+            document.getElementById('dataValue').value = value;
+
+            // Remove the entry from the list
+            document.getElementById('entries').removeChild(listItem);
+        });
+
+        // Delete button functionality
+        const deleteButton = listItem.querySelector('.delete-button');
+        deleteButton.addEventListener('click', function() {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                document.getElementById('entries').removeChild(listItem);
+            }
+        });
+    }
+});
+
+
+    // In Basket Manager Button Functionality
+document.querySelector('.sidebar-item:nth-child(4)').addEventListener('click', function() {
+    // Create in basket manager modal
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 z-50 fade-in';
+    modal.id = 'inBasketManagerModal';
+    modal.innerHTML = `
+        <div class="bg-white p-8 rounded-xl shadow-lg relative max-w-md w-full">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-700" id="closeInBasketManagerModal">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">In Basket Manager</h3>
+            <form id="basketForm" class="space-y-4">
+                <div>
+                    <label for="basketItemName" class="block text-gray-700">Item Name</label>
+                    <input type="text" id="basketItemName" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter item name" required>
+                </div>
+                <div>
+                    <label for="basketItemQuantity" class="block text-gray-700">Quantity</label>
+                    <input type="number" id="basketItemQuantity" class="w-full p-2 border border-gray-300 rounded" placeholder="Enter quantity" required>
+                </div>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">Add to Basket</button>
+            </form>
+            <div id="basketList" class="mt-6">
+                <h4 class="text-lg font-semibold text-gray-800">Basket Items:</h4>
+                <ul id="basketEntries" class="list-disc pl-5"></ul>
+            </div>
+        </div>
+    `;
+    
+    // Append modal to body
+    document.body.appendChild(modal);
+
+    // Close modal functionality
+    document.getElementById('closeInBasketManagerModal').addEventListener('click', function() {
+        document.body.removeChild(modal);
+    });
+
+    // Handle form submission
+    document.getElementById('basketForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Get the values from the form
+        const itemName = document.getElementById('basketItemName').value.trim();
+        const itemQuantity = document.getElementById('basketItemQuantity').value.trim();
+
+        // Validate input
+        if (!itemName || !itemQuantity) {
+            alert("Please fill in both fields.");
+            return;
+        }
+
+        // Create a new basket entry
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            <span>${itemName}: ${itemQuantity}</span>
+            <button class="edit-button bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg ml-2">Edit</button>
+            <button class="delete-button bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg ml-2">Delete</button>
+        `;
+        document.getElementById('basketEntries').appendChild(listItem);
+
+        // Clear the form fields
+        this.reset();
+
+        // Add event listeners for edit and delete buttons
+        addEventListenersToButtons(listItem);
+    });
+
+    function addEventListenersToButtons(listItem) {
+        // Edit button functionality
+        const editButton = listItem.querySelector('.edit-button');
+        editButton.addEventListener('click', function() {
+            const dataText = listItem.querySelector('span').textContent.split(': ');
+            const name = dataText[0];
+            const quantity = dataText[1];
+
+            // Populate the form with the existing data
+            document.getElementById('basketItemName').value = name;
+            document.getElementById('basketItemQuantity').value = quantity;
+
+            // Remove the entry from the list
+            document.getElementById('basketEntries').removeChild(listItem);
+        });
+
+        // Delete button functionality
+        const deleteButton = listItem.querySelector('.delete-button');
+        deleteButton.addEventListener('click', function() {
+            if (confirm("Are you sure you want to delete this item?")) {
+                document.getElementById('basketEntries').removeChild(listItem);
+            }
+        });
+    }
+});
+// Weather Button Functionality
+document.getElementById('weatherButton').addEventListener('click', function() {
+    // Get the weather section
+    const weatherSection = document.querySelector('.md\\:col-span-2.bg-white.rounded-xl.shadow.p-6.fade-in[style="animation-delay: 0.7s;"]');
+
+    // Highlight the weather section
+    if (weatherSection) {
+        // Add highlight class
+        weatherSection.classList.add('ring-4', 'ring-blue-500', 'ring-opacity-50');
+
+        // Scroll to the weather section
+        weatherSection.scrollIntoView({ behavior: 'smooth' });
+
+        // Remove highlight after a short duration
+        setTimeout(() => {
+            weatherSection.classList.remove('ring-4', 'ring-blue-500', 'ring-opacity-50');
+        }, 2000); // Highlight lasts for 2 seconds
+    }
+});
+
+
+    </script>
+</body>
+</html>
